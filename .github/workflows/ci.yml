@@ -1,0 +1,119 @@
+# ============================================================
+# GitHub Actions — CI (Test + Build)
+# Runs on: all PRs, pushes to main, version tags
+# ============================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  NODE_VERSION: "22"
+
+jobs:
+  # ── .NET API Tests ────────────────────────────────────────
+  test-api:
+    name: Test API (.NET)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore RetailOrdering.Api/RetailOrdering.Api.csproj
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
+
+  # ── Angular Frontend Tests ───────────────────────────────
+  test-frontend:
+    name: Test Frontend (Angular)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: retail-ordering-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: retail-ordering-frontend
+        run: npm ci
+
+      - name: Run tests
+        working-directory: retail-ordering-frontend
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+  # ── Build & Publish Artifacts ────────────────────────────
+  build-api:
+    name: Build API
+    runs-on: ubuntu-latest
+    needs: [test-api]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish API
+        run: |
+          dotnet publish RetailOrdering.Api/RetailOrdering.Api.csproj \
+            --configuration Release \
+            --output ./publish/api \
+            --no-restore
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-${{ github.sha }}
+          path: publish/api/
+          retention-days: 1
+
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: [test-frontend]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: retail-ordering-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: retail-ordering-frontend
+        run: npm ci
+
+      - name: Build production bundle
+        working-directory: retail-ordering-frontend
+        run: npm run build -- --configuration production
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-${{ github.sha }}
+          path: retail-ordering-frontend/dist/retail-ordering-frontend/browser/
+          retention-days: 1
