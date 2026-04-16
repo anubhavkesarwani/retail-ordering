@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version)",
+      "Bash(dotnet --info)",
+      "Bash(ng version *)",
+      "Bash(dotnet --list-sdks)",
+      "Bash(dotnet new *)",
+      "Bash(dotnet restore *)",
+      "Bash(dotnet sln *)",
+      "Bash(dotnet add *)",
+      "Bash(ng new *)"
+    ]
+  }
+}

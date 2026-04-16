@@ -1,0 +1,32 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a routerLink="/home" class="nav-brand">
+      <span class="brand-icon">🍕</span>
+      <span>RetailOrdering</span>
+    </a>
+
+    <div class="nav-links">
+      <a routerLink="/home" routerLinkActive="active" class="nav-link">Home</a>
+      <a routerLink="/products" routerLinkActive="active" class="nav-link">Products</a>
+      @if (authService.isAuthenticated) {
+        <a routerLink="/orders" routerLinkActive="active" class="nav-link">My Orders</a>
+      }
+    </div>
+
+    <div class="nav-actions">
+      @if (authService.isAuthenticated) {
+        <button class="cart-btn" (click)="navigateToCart()">
+          🛒
+          @if (cartCount > 0) {
+            <span class="cart-badge">{{ cartCount }}</span>
+          }
+        </button>
+        <span class="nav-user">{{ authService.currentUser?.firstName }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      } @else {
+        <a routerLink="/login" class="btn-login">Login</a>
+        <a routerLink="/register" class="btn-register">Register</a>
+      }
+    </div>
+  </div>
+</nav>

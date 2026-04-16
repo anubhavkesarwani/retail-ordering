@@ -1,0 +1,84 @@
+.profile-page {
+  min-height: calc(100vh - 140px);
+  padding: 48px 24px;
+  background: radial-gradient(ellipse at top, #1a1025 0%, #0f0f13 60%);
+}
+
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f97316, #ef4444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.profile-header h1 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.email { color: #64748b; font-size: 0.9rem; margin-bottom: 8px; }
+
+.role-badge {
+  background: rgba(249, 115, 22, 0.15);
+  border: 1px solid rgba(249,115,22,0.3);
+  color: #f97316;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.profile-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.profile-card h2 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 20px; }
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.detail-row:last-child { border-bottom: none; }
+.label { color: #64748b; font-size: 0.875rem; }
+.value { color: #e2e8f0; font-size: 0.875rem; font-weight: 500; }
+
+.profile-actions { display: flex; gap: 12px; }
+
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); }
